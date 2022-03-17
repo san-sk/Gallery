@@ -1,0 +1,37 @@
+<resources>
+
+    <style name="Theme.Fab_Bottom_app_bar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/light_blue</item>
+        <item name="colorOnPrimary">#FFF</item>
+    </style>
+
+    <style name="CustomCardViewStyle" parent="@style/Widget.MaterialComponents.CardView">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay_card_custom_corners</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay_card_custom_corners" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeBottomRight">50dp</item>
+        <item name="cornerSizeBottomLeft">50dp</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="CardItemStyle" parent="Widget.MaterialComponents.CardView">
+        <item name="android:layout_height">100dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginStart">14dp</item>
+        <item name="android:layout_marginEnd">14dp</item>
+        <item name="cardCornerRadius">12dp</item>
+    </style>
+
+    <style name="CardViewStyle" parent="CardView">
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginStart">14dp</item>
+        <item name="android:layout_marginEnd">14dp</item>
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">4dp</item>
+    </style>
+</resources>
