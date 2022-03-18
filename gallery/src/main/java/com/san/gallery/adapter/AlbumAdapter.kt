@@ -5,6 +5,8 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +17,9 @@ import com.san.gallery.databinding.ItemAlbumBinding
 
 
 class AlbumAdapter(val context: Context, val albumAdapter: AlbumAdapter) :
-    ListAdapter<ImageFolder, RecyclerView.ViewHolder>(AlbumDiffCallBack()) {
+    ListAdapter<ImageFolder, RecyclerView.ViewHolder>(AlbumDiffCallBack()), Filterable {
+
+    private var imageListSrc = listOf<ImageFolder>()
 
     class AlbumDiffCallBack : DiffUtil.ItemCallback<ImageFolder>() {
         override fun areItemsTheSame(
@@ -77,5 +81,30 @@ class AlbumAdapter(val context: Context, val albumAdapter: AlbumAdapter) :
 
     fun interface AlbumAdapter {
         fun onClick(item: ImageFolder)
+    }
+
+    fun saveOriginalList(list: List<ImageFolder>) {
+        imageListSrc = list
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(p0: CharSequence?): FilterResults {
+                return FilterResults().apply {
+                    values = this@AlbumAdapter.imageListSrc.filter {
+                        it.name?.contains(p0.toString(), true) == true
+                    }
+
+                }
+            }
+
+            override fun publishResults(p0: CharSequence?, p1: FilterResults?) {
+                @Suppress("UNCHECKED_CAST")
+                (p1?.values as List<ImageFolder>?)?.let {
+                    submitList(it)
+                }
+            }
+
+        }
     }
 }

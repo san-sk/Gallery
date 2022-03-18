@@ -5,6 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
+import androidx.core.widget.doAfterTextChanged
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -48,7 +51,13 @@ class AlbumsFragment : Fragment(R.layout.fragment_albums) {
         super.onViewCreated(view, savedInstanceState)
         binding.rvAlbums.adapter = adapter
         if (viewModel.albums.isEmpty()) loadAlbums() else adapter.submitList(viewModel.albums)
-        Toast.makeText(requireContext(),"album fragment", Toast.LENGTH_SHORT).show()
+        initSearchView()
+    }
+
+    private fun initSearchView() {
+        binding.etSearch.doOnTextChanged { text, _, _, count ->
+            if (count > 0) adapter.filter.filter(text) else adapter.submitList(viewModel.albums)
+        }
     }
 
     private fun loadAlbums() {
@@ -57,7 +66,8 @@ class AlbumsFragment : Fragment(R.layout.fragment_albums) {
                 override fun onImagesLoaded(imageFolders: List<ImageFolder>) {
                     if (imageFolders.isNotEmpty()) {
                         viewModel.albums = imageFolders
-                        adapter.submitList(imageFolders)
+                        adapter.saveOriginalList(viewModel.albums)
+                        adapter.submitList(viewModel.albums)
                     }
                 }
             })

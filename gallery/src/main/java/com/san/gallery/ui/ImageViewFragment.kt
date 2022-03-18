@@ -28,7 +28,7 @@ class ImageViewFragment : Fragment(R.layout.fragment_image_view) {
 
     private fun loadImages() {
         adapter.submitList(args.images?.images)
-        binding.vpImageview.setCurrentItem(args.position, true)
+        binding.vpImageview.setCurrentItem(args.position, false)
 
     }
 
