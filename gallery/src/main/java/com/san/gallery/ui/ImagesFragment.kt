@@ -16,10 +16,10 @@ class ImagesFragment : Fragment(R.layout.fragment_images) {
     private val args: ImagesFragmentArgs by navArgs()
 
     private val adapter: ImageAdapter by lazy {
-        ImageAdapter(requireContext()) {
+        ImageAdapter(requireContext()) { position, item ->
             findNavController().navigate(
                 ImagesFragmentDirections.actionImagesFragmentToImageViewFragment(
-                     images = args.images, position =  it
+                     images = args.images, position =  position
                 )
             )
         }

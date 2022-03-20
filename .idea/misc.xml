@@ -28,11 +28,15 @@
         <entry key="..\:/Users/santhanamk/Desktop/DXB/app/src/main/res/layout/item_image_view.xml" value="0.2152777777777778" />
         <entry key="..\:/Users/santhanamk/Desktop/DXB/app/src/main/res/menu/bottom_nav_menu.xml" value="0.25" />
         <entry key="..\:/Users/santhanamk/Desktop/DXB/gallery/src/main/res/drawable/folder_fg.xml" value="0.158" />
+        <entry key="..\:/Users/santhanamk/Desktop/DXB/gallery/src/main/res/drawable/selector_item_image.xml" value="0.158" />
+        <entry key="..\:/Users/santhanamk/Desktop/DXB/gallery/src/main/res/drawable/shape_frame.xml" value="0.158" />
         <entry key="..\:/Users/santhanamk/Desktop/DXB/gallery/src/main/res/layout/activity_gallery.xml" value="0.2152777777777778" />
         <entry key="..\:/Users/santhanamk/Desktop/DXB/gallery/src/main/res/layout/activity_main.xml" value="0.2152777777777778" />
         <entry key="..\:/Users/santhanamk/Desktop/DXB/gallery/src/main/res/layout/fragment_albums.xml" value="0.22" />
         <entry key="..\:/Users/santhanamk/Desktop/DXB/gallery/src/main/res/layout/fragment_image_view.xml" value="0.2152777777777778" />
         <entry key="..\:/Users/santhanamk/Desktop/DXB/gallery/src/main/res/layout/item_album.xml" value="0.25" />
+        <entry key="..\:/Users/santhanamk/Desktop/DXB/gallery/src/main/res/layout/item_image.xml" value="0.2152777777777778" />
+        <entry key="..\:/Users/santhanamk/Desktop/DXB/gallery/src/main/res/layout/item_small_preview.xml" value="0.2152777777777778" />
       </map>
     </option>
   </component>

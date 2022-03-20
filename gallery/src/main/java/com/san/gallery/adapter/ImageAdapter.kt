@@ -12,10 +12,14 @@ import com.bumptech.glide.Glide
 import com.san.gallery.R
 import com.san.gallery.data.ImageItem
 import com.san.gallery.databinding.ItemImageBinding
+import com.san.gallery.utils.setVisibility
 
 
-class ImageAdapter(val context: Context, val imageAdapter: ImageAdapter) :
+class ImageAdapter(val context: Context, val imageAdapter: ImageAdapterInterface) :
     ListAdapter<ImageItem, RecyclerView.ViewHolder>(ImageDiffCallBack()) {
+
+    var isPickerModeEnabled = false
+    val selectedItems = mutableListOf<ImageItem>()
 
     class ImageDiffCallBack : DiffUtil.ItemCallback<ImageItem>() {
         override fun areItemsTheSame(
@@ -46,10 +50,13 @@ class ImageAdapter(val context: Context, val imageAdapter: ImageAdapter) :
 
     inner class ImagesItem(var binding: ItemImageBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        @SuppressLint("SetTextI18n")
+        @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
         fun onBind(item: ImageItem) {
             with(binding) {
-
+                binding.cbSelectItem.apply {
+                    setVisibility(isPickerModeEnabled)
+                    isChecked = selectedItems.contains(item)
+                }
                 try {
                     item.uri?.let {
                         Glide.with(ivImageCover.context).load(it)
@@ -64,13 +71,28 @@ class ImageAdapter(val context: Context, val imageAdapter: ImageAdapter) :
                 }
 
                 root.setOnClickListener {
-                    imageAdapter.onClick(adapterPosition)
+                    if (!isPickerModeEnabled) imageAdapter.onClick(adapterPosition, item)
+                }
+
+                binding.cbSelectItem.setOnClickListener {
+                    selectedItems.contains(item).let {
+                        binding.cbSelectItem.isChecked = !it
+                        if (it) selectedItems.remove(item) else selectedItems.add(item)
+                    }
+                }
+
+                root.setOnLongClickListener {
+                    isPickerModeEnabled = true
+                    notifyDataSetChanged()
+                    false
                 }
             }
         }
     }
 
-    fun interface ImageAdapter {
-        fun onClick(position: Int)
+    fun interface ImageAdapterInterface {
+        fun onClick(position: Int, item: ImageItem)
     }
+
+
 }

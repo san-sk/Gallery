@@ -4,29 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.widget.SearchView
 import androidx.core.widget.doAfterTextChanged
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.san.gallery.R
 import com.san.gallery.adapter.AlbumAdapter
-import com.san.gallery.data.ImageDataSource
-import com.san.gallery.data.ImageFolder
 import com.san.gallery.databinding.FragmentAlbumsBinding
-import com.san.gallery.viewmodel.AlbumsViewModel
+import com.san.gallery.utils.setVisibility
+import com.san.gallery.viewmodel.CommonViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class AlbumsFragment : Fragment(R.layout.fragment_albums) {
 
     private lateinit var binding: FragmentAlbumsBinding
 
-    private val imageDataSource by lazy { ImageDataSource(requireActivity()) }
-
-    private val viewModel by viewModels<AlbumsViewModel>()
+    private val viewModel by activityViewModels<CommonViewModel>()
 
     private val adapter: AlbumAdapter by lazy {
         AlbumAdapter(requireContext()) {
@@ -50,27 +45,34 @@ class AlbumsFragment : Fragment(R.layout.fragment_albums) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.rvAlbums.adapter = adapter
-        if (viewModel.albums.isEmpty()) loadAlbums() else adapter.submitList(viewModel.albums)
-        initSearchView()
+        if (viewModel.albums.isEmpty()) loadAlbums() else adapter.apply {
+            submitList(viewModel.albums)
+            saveOriginalList(viewModel.albums)
+        }
+        setupSearchView()
     }
 
-    private fun initSearchView() {
-        binding.etSearch.doOnTextChanged { text, _, _, count ->
-            if (count > 0) adapter.filter.filter(text) else adapter.submitList(viewModel.albums)
+    private fun setupSearchView() {
+        binding.etSearch.apply {
+            doAfterTextChanged { text ->
+                if (text?.length ?: 0 > 0) adapter.filter.filter(text)
+                else adapter.submitList(viewModel.albums)
+                binding.tvNotFound.setVisibility(adapter.currentList.isEmpty())
+            }
         }
     }
 
     private fun loadAlbums() {
         lifecycleScope.launch {
-            imageDataSource.loadImage(object : ImageDataSource.OnImagesLoadedListener {
-                override fun onImagesLoaded(imageFolders: List<ImageFolder>) {
-                    if (imageFolders.isNotEmpty()) {
-                        viewModel.albums = imageFolders
-                        adapter.saveOriginalList(viewModel.albums)
-                        adapter.submitList(viewModel.albums)
-                    }
+            viewModel.albumsFlow.collectLatest {
+                it?.let {
+                    viewModel.albums = it
+                    adapter.submitList(viewModel.albums)
+                    adapter.saveOriginalList(viewModel.albums)
+                    binding.tvNotFound.setVisibility(adapter.currentList.isEmpty())
                 }
-            })
+            }
+            viewModel.loadGallery(requireActivity())
         }
     }
 }

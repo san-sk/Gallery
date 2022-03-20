@@ -119,7 +119,7 @@ class ImageDataSource(private val activity: FragmentActivity) :
 
 
     interface OnImagesLoadedListener {
-        fun onImagesLoaded(imageFolders: List<ImageFolder>)
+         fun onImagesLoaded(imageFolders: List<ImageFolder>)
     }
 
     companion object {
